@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DiffStory Architecture & App Map</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --canvas: #FAF8F5;
+      --card: #FFFFFF;
+      --border: #E5E0D8;
+      --ink: #111315;
+      --ink-muted: #525866;
+      --amber-bg: #FFFBEB;
+      --amber-border: #D97706;
+      --amber-text: #92400E;
+      --amber-badge: #B45309;
+      --green-bg: #F0FDF4;
+      --green-border: #15803D;
+      --green-text: #166534;
+      --green-badge: #166534;
+      --code-bg: #18191B;
+      --code-text: #E5E7EB;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--canvas);
+      color: var(--ink);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      line-height: 1.5;
+      padding: 2.5rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    header {
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .pill {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      background: #ECE6DE;
+      color: var(--ink);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    h1 {
+      font-size: 2.25rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+    }
+
+    .lead {
+      font-size: 1.1rem;
+      color: var(--ink-muted);
+      margin-top: 0.5rem;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    }
+
+    .card h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+
+    .step-box {
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.25rem;
+      background: var(--canvas);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .step-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--amber-badge);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .step-title {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--ink);
+    }
+
+    .code-ref {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      background: #E8E2D8;
+      padding: 0.15rem 0.4rem;
+      border-radius: 4px;
+      color: #78350F;
+      display: inline-block;
+    }
+
+    pre {
+      background: var(--code-bg);
+      color: var(--code-text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      padding: 1.25rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      margin-top: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .del-line {
+      color: #F87171;
+    }
+
+    .add-line {
+      color: #4ADE80;
+    }
+
+    .comment-line {
+      color: #9CA3AF;
+    }
+
+    .highlight-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      padding: 0.2rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .amber-badge {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      color: var(--amber-text);
+    }
+
+    .green-badge {
+      background: var(--green-bg);
+      border: 1px solid var(--green-border);
+      color: var(--green-text);
+    }
+
+    .flowchart {
+      background: #FFFFFF;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .flow-box {
+      flex: 1;
+      padding: 1rem;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: var(--canvas);
+    }
+
+    .flow-arrow {
+      font-size: 1.25rem;
+      color: var(--ink-muted);
+      font-weight: bold;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      border: 1px solid var(--border);
+      padding: 0.75rem 1rem;
+      text-align: left;
+    }
+
+    th {
+      background: #F4EFEA;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="pill">Architecture &amp; App Map</div>
+      <h1>DiffStory — The Post-Prompt Receipt</h1>
+      <p class="lead">
+        A post-prompt audit tool for AI coding agents that compares the prompt you typed against the <code>git diff</code> returned, deterministically flagging unrequested code mutations and generating a 1-click restore prompt.
+      </p>
+    </header>
+
+    <!-- Core Takeaway Card -->
+    <section class="card">
+      <h2>🎯 Core Architectural Takeaway</h2>
+      <p style="color: var(--ink-muted); margin-bottom: 1rem;">
+        Modern AI applications often fail by delegating <em>everything</em>—including verifiable ground truth—to non-deterministic LLM calls. DiffStory proves a powerful hybrid pattern:
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Responsibility</th>
+            <th>Component</th>
+            <th>Guarantees</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Truth &amp; Classification</strong> (Did the prompt ask for this?)</td>
+            <td><code class="code-ref">src/lib/receiptEngine.js</code></td>
+            <td><strong>100% Deterministic:</strong> Zero hallucinations, instant audit, verifiable word-for-word proof.</td>
+          </tr>
+          <tr>
+            <td><strong>Impact &amp; Reversion</strong> (What did it break &amp; how to restore?)</td>
+            <td><code class="code-ref">src/lib/liveModel.js</code> (Gemini)</td>
+            <td><strong>Strictly Bounded:</strong> Only called for unmentioned hunks; output formatted as concise impact + copyable prompt.</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Code Tour Across 3 Locations -->
+    <section class="card">
+      <h2>🗺️ The 3-Location Code Tour (Single Click Trace)</h2>
+      <p style="color: var(--ink-muted);">
+        When a user clicks <strong>"Generate Post-Prompt Receipt"</strong>, execution flows sequentially through exactly three distinct code locations:
+      </p>
+
+      <div class="steps-grid">
+        <!-- Location 1 -->
+        <div class="step-box">
+          <span class="step-number">Location 1 &middot; Orchestration</span>
+          <div class="step-title">Workbench UI &amp; State</div>
+          <code class="code-ref">src/App.jsx</code>
+          <p style="font-size: 0.85rem; color: var(--ink-muted);">
+            Captures the user prompt &amp; diff, dispatches the deterministic engine, immediately renders the sorted cards, and fires bounded async LLM requests for unmentioned hunks.
+          </p>
+        </div>
+
+        <!-- Location 2 -->
+        <div class="step-box">
+          <span class="step-number">Location 2 &middot; Deterministic Engine</span>
+          <div class="step-title">Pure Token Intersection</div>
+          <code class="code-ref">src/lib/receiptEngine.js</code>
+          <p style="font-size: 0.85rem; color: var(--ink-muted);">
+            Splits unified diff on <code>@@</code>, extracts tokens from mutated lines (skipping syntax boilerplate), computes intersection with prompt tokens, and sorts amber warning hunks to top.
+          </p>
+        </div>
+
+        <!-- Location 3 -->
+        <div class="step-box">
+          <span class="step-number">Location 3 &middot; Bounded Model</span>
+          <div class="step-title">Impact &amp; Restore Generation</div>
+          <code class="code-ref">src/lib/liveModel.js</code>
+          <p style="font-size: 0.85rem; color: var(--ink-muted);">
+            Sends structured contract to Gemini exclusively for <span class="highlight-pill amber-badge">NOT MENTIONED</span> hunks to produce the 1-sentence impact statement and 1-click restore prompt.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- End-to-End Walkthrough -->
+    <section class="card">
+      <h2>⚡ Step-by-Step Execution Walkthrough (Preset 1 Demo)</h2>
+      <div class="flowchart">
+        <div class="flow-row">
+          <div class="flow-box">
+            <strong>Input State:</strong>
+            <p style="font-size: 0.85rem; color: var(--ink-muted); margin-top: 0.25rem;">
+              Prompt: <em>"Change the submit button color to blue"</em><br>
+              File: <code>SignupForm.jsx</code> (2 diff hunks)
+            </p>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box">
+            <strong>Token Extraction:</strong>
+            <p style="font-size: 0.85rem; color: var(--ink-muted); margin-top: 0.25rem;">
+              Prompt tokens: <code>['submit', 'button', 'color', 'blue']</code> (stopwords stripped).
+            </p>
+          </div>
+        </div>
+
+        <div class="flow-row">
+          <div class="flow-box" style="border-left: 4px solid var(--amber-border);">
+            <span class="highlight-pill amber-badge">HUNK #1 (Lines 10-14)</span>
+            <pre style="margin-top: 0.5rem;"><span class="del-line">- if (!email.includes('@')) {</span>
+<span class="del-line">-   return setError('Please enter a valid email address');</span>
+<span class="del-line">- }</span></pre>
+            <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+              Hunk tokens: <code>['email', 'includes', 'error', 'valid']</code><br>
+              Matched: <strong>0 tokens</strong> &rarr; <strong style="color: var(--amber-badge)">NOT MENTIONED IN PROMPT</strong>
+            </p>
+          </div>
+          <div class="flow-arrow">&rarr;</div>
+          <div class="flow-box" style="border-left: 4px solid var(--green-border);">
+            <span class="highlight-pill green-badge">HUNK #2 (Lines 26-30)</span>
+            <pre style="margin-top: 0.5rem;"><span class="del-line">- className="px-4 py-2 bg-gray-800 text-white rounded"</span>
+<span class="add-line">+ className="px-4 py-2 bg-blue-600 text-white rounded"</span></pre>
+            <p style="font-size: 0.8rem; margin-top: 0.5rem;">
+              Hunk tokens: <code>['gray', 'white', 'blue']</code><br>
+              Matched: <strong>['blue']</strong> &rarr; <strong style="color: var(--green-badge)">MENTIONED IN PROMPT</strong>
+            </p>
+          </div>
+        </div>
+
+        <div class="flow-box" style="background: var(--amber-bg); border-color: var(--amber-border);">
+          <strong>Bounded Live AI Receipt Generated for Hunk #1:</strong>
+          <p style="font-size: 0.88rem; margin-top: 0.5rem; color: var(--amber-text);">
+            <strong>Impact Statement:</strong> &ldquo;Removed email validation check that prevented form submission when the email address lacked an '@' symbol.&rdquo;
+          </p>
+          <p style="font-size: 0.88rem; margin-top: 0.25rem; color: var(--amber-text);">
+            <strong>Copyable Restore Prompt:</strong> &ldquo;Please restore the email validation check inside the handleSubmit function to ensure emails contain an '@' symbol before submitting.&rdquo;
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fallback & Error Integrity Card -->
+    <section class="card">
+      <h2>🛡️ Graceful Degradation &amp; Zero-Hallucination Fallback</h2>
+      <p style="color: var(--ink-muted); margin-bottom: 0.75rem;">
+        Per PRD Rule 3, DiffStory will <strong>never fake or silently mock AI output</strong>:
+      </p>
+      <ul style="padding-left: 1.5rem; font-size: 0.9rem; color: var(--ink-muted); line-height: 1.8;">
+        <li>If offline, rate-limited (503/429), or no API key is supplied, the amber and green hunk cards still render with <strong>100% deterministic accuracy</strong>.</li>
+        <li>The AI receipt box transparently indicates: <em>"Live model unavailable — deterministic token receipt above is complete."</em></li>
+        <li>Users can configure or test their custom Gemini API key anytime via the top-bar key dialog.</li>
+      </ul>
+    </section>
+
+    <footer style="text-align: center; color: var(--ink-muted); font-size: 0.8rem; padding: 2rem 0;">
+      DiffStory &middot; Built with React, Vite, Tailwind CSS, &amp; Google Gemini API &middot; MIT License
+    </footer>
+  </div>
+</body>
+</html>

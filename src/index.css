@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .receipt-edge {
+    background: radial-gradient(circle, transparent, transparent 50%, #FAF8F5 50%, #FAF8F5 100%);
+    background-size: 16px 16px;
+  }
+}
+
+/* Custom scrollbars for diff code views */
+pre::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+pre::-webkit-scrollbar-thumb {
+  background: #E5E0D8;
+  border-radius: 3px;
+}
+pre::-webkit-scrollbar-thumb:hover {
+  background: #CBD5E1;
+}
