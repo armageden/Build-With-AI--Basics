@@ -1,8 +1,14 @@
 {
   "name": "diffstory",
-  "private": true,
   "version": "0.1.0",
+  "description": "The post-prompt receipt for AI coding agents that catches unrequested collateral code changes.",
+  "license": "MIT",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/armageden/Build-With-AI--Basics.git"
+  },
+  "homepage": "https://github.com/armageden/Build-With-AI--Basics#readme",
   "scripts": {
     "dev": "./node_modules/.bin/vite",
     "build": "./node_modules/.bin/vite build",
